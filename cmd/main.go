@@ -75,7 +75,7 @@ func main() {
 		router,
 		handler.EnterpriseHandlerDeps{
 			EnterpriseManager: equipmentService,
-			BalanceManager:    walletService,
+			BallanceManager:   walletService,
 			StatsProvider:     statsService,
 			MinersCancel:      minersCancel,
 			Ctx:               serverCtx,

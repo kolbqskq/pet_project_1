@@ -42,7 +42,7 @@ func (s *WalletService) startListening() {
 	}()
 }
 
-func (s *WalletService) GetBalance() int {
+func (s *WalletService) GetBallance() int {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 	return int(s.Coal)

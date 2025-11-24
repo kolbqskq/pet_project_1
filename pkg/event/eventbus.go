@@ -1,6 +1,10 @@
 package event
 
-import "sync"
+import (
+	"log"
+	"sync"
+	"time"
+)
 
 const (
 	EventMinerStart = "miner.start"
@@ -28,14 +32,15 @@ func (e *EventBus) Publish(event Event) {
 	for _, ch := range e.subs {
 		select {
 		case ch <- event:
-		default:
+		case <-time.After(time.Millisecond * 10):
+			log.Printf("Event lost:%v", event)
 		}
 	}
 	e.mu.RUnlock()
 }
 
 func (e *EventBus) Subscribe() <-chan Event {
-	ch := make(chan Event, 100)
+	ch := make(chan Event, 1000)
 	e.mu.Lock()
 	e.subs = append(e.subs, ch)
 	e.mu.Unlock()

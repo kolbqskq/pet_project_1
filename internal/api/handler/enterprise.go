@@ -6,14 +6,14 @@ import (
 	"MinersGame/internal/usecase/stats"
 	"MinersGame/pkg/res"
 	"context"
-	"fmt"
+	"log"
 	"net/http"
 	"time"
 )
 
 type EnterpriseHandler struct {
 	enterprise.EnterpriseManager
-	enterprise.BalanceManager
+	enterprise.BallanceManager
 	stats.StatsProvider
 	MinersCancel context.CancelFunc
 	Ctx          context.Context
@@ -23,7 +23,7 @@ type EnterpriseHandler struct {
 
 type EnterpriseHandlerDeps struct {
 	enterprise.EnterpriseManager
-	enterprise.BalanceManager
+	enterprise.BallanceManager
 	stats.StatsProvider
 	MinersCancel context.CancelFunc
 	Ctx          context.Context
@@ -34,7 +34,7 @@ type EnterpriseHandlerDeps struct {
 func NewEnterpriseHandler(router *http.ServeMux, deps EnterpriseHandlerDeps) {
 	handler := &EnterpriseHandler{
 		EnterpriseManager: deps.EnterpriseManager,
-		BalanceManager:    deps.BalanceManager,
+		BallanceManager:   deps.BallanceManager,
 		StatsProvider:     deps.StatsProvider,
 		MinersCancel:      deps.MinersCancel,
 		Ctx:               deps.Ctx,
@@ -58,7 +58,7 @@ func (handler *EnterpriseHandler) EndGame() http.HandlerFunc {
 			return
 		}
 		response := payload.EndGameResponse{
-			Balance:      handler.GetBalance(),
+			Balance:      handler.GetBallance(),
 			Miners:       miners,
 			CountMiners:  handler.GetCountsAllClass(),
 			GameDuration: time.Since(*handler.TimeStart).String(),
@@ -68,7 +68,7 @@ func (handler *EnterpriseHandler) EndGame() http.HandlerFunc {
 
 		go func() {
 			if err := handler.Server.Shutdown(handler.Ctx); err != nil {
-				fmt.Println("Server shutdown error:", err)
+				log.Printf("Server shutdown error: %v", err)
 			}
 		}()
 	}
@@ -77,7 +77,7 @@ func (handler *EnterpriseHandler) EndGame() http.HandlerFunc {
 func (handler *EnterpriseHandler) GetCoal() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		response := payload.GetBalanceResponse{
-			Coal: handler.GetBalance(),
+			Coal: handler.GetBallance(),
 		}
 		res.Json(w, 200, response)
 	}

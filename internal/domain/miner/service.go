@@ -23,7 +23,10 @@ func NewMinerService(deps MinerServiceDeps) *MinerService {
 
 func (s *MinerService) Mine(ctx context.Context, m *Miner) {
 
+	ticker := time.NewTicker(m.Config.BreakTime)
+
 	go func() {
+		defer ticker.Stop()
 
 		s.EventBus.Publish(event.Event{
 			Type: event.EventMinerStart,
@@ -31,8 +34,6 @@ func (s *MinerService) Mine(ctx context.Context, m *Miner) {
 		})
 
 		coalPerTick := m.Config.Power
-		ticker := time.NewTicker(m.Config.BreakTime)
-		defer ticker.Stop()
 
 		for {
 			select {

@@ -4,6 +4,6 @@ type EnterpriseManager interface {
 	ValidateEndGame() error
 }
 
-type BalanceManager interface {
-	GetBalance() int
+type BallanceManager interface {
+	GetBallance() int
 }

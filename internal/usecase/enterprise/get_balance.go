@@ -1,9 +1,9 @@
 package enterprise
 
 type EnterpriseWalletDeps struct {
-	BalanceManager BalanceManager
+	BalanceManager BallanceManager
 }
 
 func GetBalance(deps EnterpriseWalletDeps) int {
-	return deps.BalanceManager.GetBalance()
+	return deps.BalanceManager.GetBallance()
 }

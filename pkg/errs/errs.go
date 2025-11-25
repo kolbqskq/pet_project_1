@@ -11,10 +11,6 @@ func (e *HTTPError) Error() string {
 	return e.Message
 }
 
-func NewWrongMinerClass() error {
-	return &HTTPError{Code: http.StatusBadRequest, Message: "wrong miner class request"}
-}
-
 func NewNotEnoughBalance() error {
 	return &HTTPError{Code: http.StatusConflict, Message: "not enough balance"}
 }
@@ -29,10 +25,6 @@ func NewCustomErr(code int, message string) error {
 
 func NewHaveNotMiners() error {
 	return &HTTPError{Code: 409, Message: "you have not miners"}
-}
-
-func NewNotAllTaskCompleted() error {
-	return &HTTPError{Code: 409, Message: "Not all tasks are completed"}
 }
 
 func NewInvalidClass() error {

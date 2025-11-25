@@ -6,7 +6,6 @@ import (
 	"MinersGame/internal/usecase/stats"
 	"MinersGame/pkg/res"
 	"context"
-	"log"
 	"net/http"
 	"time"
 )
@@ -15,20 +14,18 @@ type EnterpriseHandler struct {
 	enterprise.EnterpriseManager
 	enterprise.BallanceManager
 	stats.StatsProvider
-	MinersCancel context.CancelFunc
-	Ctx          context.Context
-	Server       *http.Server
-	TimeStart    *time.Time
+	Ctx       context.Context
+	Cancel    context.CancelFunc
+	TimeStart *time.Time
 }
 
 type EnterpriseHandlerDeps struct {
 	enterprise.EnterpriseManager
 	enterprise.BallanceManager
 	stats.StatsProvider
-	MinersCancel context.CancelFunc
-	Ctx          context.Context
-	Server       *http.Server
-	TimeStart    *time.Time
+	Ctx       context.Context
+	Cancel    context.CancelFunc
+	TimeStart *time.Time
 }
 
 func NewEnterpriseHandler(router *http.ServeMux, deps EnterpriseHandlerDeps) {
@@ -36,13 +33,12 @@ func NewEnterpriseHandler(router *http.ServeMux, deps EnterpriseHandlerDeps) {
 		EnterpriseManager: deps.EnterpriseManager,
 		BallanceManager:   deps.BallanceManager,
 		StatsProvider:     deps.StatsProvider,
-		MinersCancel:      deps.MinersCancel,
 		Ctx:               deps.Ctx,
-		Server:            deps.Server,
+		Cancel:            deps.Cancel,
 		TimeStart:         deps.TimeStart,
 	}
 
-	router.HandleFunc("GET /enterprise/end", handler.EndGame())
+	router.HandleFunc("POST /enterprise/end", handler.EndGame())
 	router.HandleFunc("GET /enterprise/balance", handler.GetCoal())
 }
 
@@ -63,14 +59,9 @@ func (handler *EnterpriseHandler) EndGame() http.HandlerFunc {
 			CountMiners:  handler.GetCountsAllClass(),
 			GameDuration: time.Since(*handler.TimeStart).String(),
 		}
-		handler.MinersCancel()
 		res.Json(w, 200, response)
 
-		go func() {
-			if err := handler.Server.Shutdown(handler.Ctx); err != nil {
-				log.Printf("Server shutdown error: %v", err)
-			}
-		}()
+		handler.Cancel()
 	}
 }
 

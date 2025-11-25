@@ -7,18 +7,18 @@ import (
 	"sync"
 )
 
-type StatsMinersService struct {
+type StatsService struct {
 	StatsMiners
 	EventBus *event.EventBus
 	mu       sync.RWMutex
 }
 
-type StatsMinersServiceDeps struct {
+type StatsServiceDeps struct {
 	EventBus *event.EventBus
 }
 
-func NewStatsMinersService(deps StatsMinersServiceDeps) *StatsMinersService {
-	s := &StatsMinersService{
+func NewStatsMinersService(deps StatsServiceDeps) *StatsService {
+	s := &StatsService{
 		StatsMiners: StatsMiners{
 			StatMiners: make(map[string]map[string]*miner.Miner),
 		},
@@ -28,7 +28,7 @@ func NewStatsMinersService(deps StatsMinersServiceDeps) *StatsMinersService {
 	return s
 }
 
-func (s *StatsMinersService) startListening() {
+func (s *StatsService) startListening() {
 	go func() {
 
 		for msg := range s.EventBus.Subscribe() {
@@ -53,7 +53,7 @@ func (s *StatsMinersService) startListening() {
 	}()
 }
 
-func (s *StatsMinersService) GetStats() ([]MinerInfo, error) {
+func (s *StatsService) GetStats() ([]MinerInfo, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 	response := []MinerInfo{}
@@ -71,7 +71,7 @@ func (s *StatsMinersService) GetStats() ([]MinerInfo, error) {
 	return response, nil
 }
 
-func (s *StatsMinersService) GetStatsByClass(class string) ([]MinerInfo, error) {
+func (s *StatsService) GetStatsByClass(class string) ([]MinerInfo, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
@@ -93,7 +93,7 @@ func (s *StatsMinersService) GetStatsByClass(class string) ([]MinerInfo, error) 
 	return response, nil
 }
 
-func (s *StatsMinersService) GetCountsAllClass() []CountsMiners {
+func (s *StatsService) GetCountsAllClass() []CountsMiners {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 	response := []CountsMiners{}

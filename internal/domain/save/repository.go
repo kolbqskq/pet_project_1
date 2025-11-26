@@ -3,7 +3,8 @@ package save
 import (
 	"MinersGame/pkg/db"
 	"MinersGame/pkg/errs"
-	"log/slog"
+
+	"github.com/gookit/slog"
 )
 
 type SaveRepository struct {

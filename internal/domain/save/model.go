@@ -4,8 +4,9 @@ import (
 	"MinersGame/internal/domain/equipment"
 	"MinersGame/internal/domain/stats"
 	"encoding/json"
-	"log/slog"
 	"time"
+
+	"github.com/gookit/slog"
 
 	"gorm.io/datatypes"
 	"gorm.io/gorm"

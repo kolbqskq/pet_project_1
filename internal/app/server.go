@@ -4,8 +4,9 @@ import (
 	"MinersGame/internal/api/handler"
 	"MinersGame/internal/domain/save"
 	"MinersGame/pkg/res"
-	"log/slog"
 	"net/http"
+
+	"github.com/gookit/slog"
 )
 
 func (app *App) RunServer(addr string) {

@@ -3,7 +3,7 @@ package stats
 import "MinersGame/internal/domain/miner"
 
 type StatsMiners struct {
-	StatMiners map[string]map[string]*miner.Miner
+	StatMiners map[string][]*miner.Miner
 }
 
 type MinerInfo struct {

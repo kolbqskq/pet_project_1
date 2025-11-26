@@ -24,7 +24,7 @@ type EnterpriseHandlerDeps struct {
 	enterprise.BallanceManager
 	stats.StatsProvider
 	Ctx       context.Context
-	Cancel    context.CancelFunc
+	AppCancel context.CancelFunc
 	TimeStart *time.Time
 }
 
@@ -34,12 +34,12 @@ func NewEnterpriseHandler(router *http.ServeMux, deps EnterpriseHandlerDeps) {
 		BallanceManager:   deps.BallanceManager,
 		StatsProvider:     deps.StatsProvider,
 		Ctx:               deps.Ctx,
-		Cancel:            deps.Cancel,
+		Cancel:            deps.AppCancel,
 		TimeStart:         deps.TimeStart,
 	}
 
 	router.HandleFunc("POST /enterprise/end", handler.EndGame())
-	router.HandleFunc("GET /enterprise/balance", handler.GetCoal())
+	router.HandleFunc("GET /enterprise/ballance", handler.GetCoal())
 }
 
 func (handler *EnterpriseHandler) EndGame() http.HandlerFunc {

@@ -69,3 +69,9 @@ func (e *EquipmentService) GetPrice(name string) int {
 	price := e.Equipments[name].Price
 	return price
 }
+
+func (e *EquipmentService) Load(equipments map[string]Equipment) {
+	e.mu.Lock()
+	defer e.mu.Unlock()
+	e.Equipments = equipments
+}

@@ -2,12 +2,17 @@ package app
 
 import (
 	"MinersGame/internal/api/handler"
+	"MinersGame/internal/domain/save"
+	"MinersGame/pkg/res"
 	"log/slog"
 	"net/http"
 )
 
 func (app *App) RunServer(addr string) {
 	router := http.NewServeMux()
+
+	//Repositories:
+	saveRepository := save.NewSaveRepository(app.Db)
 
 	//Handlers:
 
@@ -42,10 +47,21 @@ func (app *App) RunServer(addr string) {
 			BallanceManager:   app.WalletService,
 			StatsProvider:     app.StatsService,
 			Ctx:               app.AppCtx,
-			Cancel:            app.Cancel,
+			AppCancel:         app.AppCancel,
 			TimeStart:         app.TimeStart,
 		},
 	)
+
+	handler.NewSaveHandler(
+		router, handler.SaveHandlerDeps{
+			GameSaveManager:  saveRepository,
+			BalanceManager:   app.WalletService,
+			EquipmentManager: app.EquipmentService,
+			StatsProvider:    app.StatsService,
+			GameLoadManager:  saveRepository,
+			LoadFunc:         app.LoadSave,
+			TimeStart:        app.TimeStart,
+		})
 
 	server := &http.Server{
 		Addr:    addr,
@@ -64,4 +80,14 @@ func (app *App) RunServer(addr string) {
 		slog.Error(err.Error())
 	}
 
+}
+
+func (app *App) LoadHandler(router *http.ServeMux, repo *save.SaveRepository) {
+	router.HandleFunc("GET /load", func(w http.ResponseWriter, r *http.Request) {
+		name := r.URL.Query().Get("name")
+		if name == "" {
+			res.Json(w, 400, "name is required")
+		}
+
+	})
 }

@@ -20,7 +20,7 @@ type StatsServiceDeps struct {
 func NewStatsMinersService(deps StatsServiceDeps) *StatsService {
 	s := &StatsService{
 		StatsMiners: StatsMiners{
-			StatMiners: make(map[string]map[string]*miner.Miner),
+			StatMiners: make(map[string][]*miner.Miner),
 		},
 		EventBus: deps.EventBus,
 	}
@@ -40,13 +40,12 @@ func (s *StatsService) startListening() {
 				continue
 			}
 			class := m.Config.Class
-			id := m.ID
 			s.mu.Lock()
 			if _, ok := s.StatMiners[class]; !ok {
-				s.StatMiners[class] = make(map[string]*miner.Miner)
+				s.StatMiners[class] = make([]*miner.Miner, 0)
 			}
 
-			s.StatMiners[class][id] = m
+			s.StatMiners[class] = append(s.StatMiners[class], m)
 
 			s.mu.Unlock()
 		}
@@ -104,4 +103,10 @@ func (s *StatsService) GetCountsAllClass() []CountsMiners {
 		})
 	}
 	return response
+}
+
+func (s *StatsService) Load() {
+	s.mu.Lock()
+	s.StatMiners = make(map[string][]*miner.Miner)
+	s.mu.Unlock()
 }

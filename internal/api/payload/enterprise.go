@@ -12,5 +12,5 @@ type EndGameResponse struct {
 }
 
 type GetBalanceResponse struct {
-	Coal int
+	Coal int `json:"coal"`
 }

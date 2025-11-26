@@ -64,3 +64,9 @@ func (s *WalletService) SpendCoal(amount int) error {
 	s.Coal -= types.Coal(amount)
 	return nil
 }
+
+func (s *WalletService) Load(coal int) {
+	s.mu.Lock()
+	s.Coal = types.Coal(coal)
+	s.mu.Unlock()
+}

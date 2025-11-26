@@ -2,6 +2,8 @@ package save
 
 import (
 	"MinersGame/pkg/db"
+	"MinersGame/pkg/errs"
+	"log/slog"
 )
 
 type SaveRepository struct {
@@ -15,6 +17,7 @@ func NewSaveRepository(db *db.Db) *SaveRepository {
 func (repo *SaveRepository) Save(save *GameSave) error {
 	saveJson, err := save.ToGameSaveJSON()
 	if err != nil {
+		slog.Error(err.Error())
 		return err
 	}
 
@@ -26,11 +29,23 @@ func (repo *SaveRepository) Load(name string) (*GameSave, error) {
 	var saveJson GameSaveJSON
 	result := repo.Db.Where("name = ?", name).First(&saveJson)
 	if result.Error != nil {
-		return nil, result.Error
+		return nil, errs.NewSaveNotFound()
 	}
 	save, err := saveJson.ToGameSave()
 	if err != nil {
 		return nil, err
 	}
 	return save, nil
+}
+
+func (repo *SaveRepository) GetSave() ([]SaveInfo, error) {
+	var info []SaveInfo
+	result := repo.Db.Model(&GameSaveJSON{}).
+		Select("name", "save_at").
+		First(&info)
+	if result.Error != nil {
+		slog.Error(result.Error.Error())
+		return []SaveInfo{}, result.Error
+	}
+	return info, nil
 }

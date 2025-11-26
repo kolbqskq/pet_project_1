@@ -4,6 +4,7 @@ import (
 	"MinersGame/internal/domain/equipment"
 	"MinersGame/internal/domain/stats"
 	"encoding/json"
+	"log/slog"
 	"time"
 
 	"gorm.io/datatypes"
@@ -30,14 +31,21 @@ type GameSave struct {
 	Miners        []stats.MinerInfo              `json:"miners"`
 }
 
+type SaveInfo struct {
+	Name   string
+	SaveAt time.Time
+}
+
 func (g *GameSaveJSON) ToGameSave() (*GameSave, error) {
 	var equipments map[string]equipment.Equipment
 	if err := json.Unmarshal(g.Equipments, &equipments); err != nil {
+		slog.Error(err.Error())
 		return nil, err
 	}
 
 	var miners []stats.MinerInfo
 	if err := json.Unmarshal(g.Miners, &miners); err != nil {
+		slog.Error(err.Error())
 		return nil, err
 	}
 
@@ -54,11 +62,13 @@ func (g *GameSaveJSON) ToGameSave() (*GameSave, error) {
 func (g *GameSave) ToGameSaveJSON() (*GameSaveJSON, error) {
 	equipments, err := json.Marshal(g.Equipments)
 	if err != nil {
+		slog.Error(err.Error())
 		return nil, err
 	}
 
 	miners, err := json.Marshal(g.Miners)
 	if err != nil {
+		slog.Error(err.Error())
 		return nil, err
 	}
 

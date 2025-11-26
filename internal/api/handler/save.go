@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"MinersGame/internal/api/payload"
 	"MinersGame/internal/domain/save"
 	"MinersGame/internal/usecase/saves"
 	"MinersGame/pkg/res"
@@ -38,8 +39,9 @@ func NewSaveHandler(router *http.ServeMux, deps SaveHandlerDeps) {
 		TimeStart:        deps.TimeStart,
 	}
 
-	router.HandleFunc("GET /game/save", handler.Save())
-	router.HandleFunc("GET /game/load", handler.Load())
+	router.HandleFunc("POST /game/save", handler.Save())
+	router.HandleFunc("POST /game/load", handler.Load())
+	router.HandleFunc("GET /game/list", handler.List())
 }
 
 func (handler *SaveHandler) Save() http.HandlerFunc {
@@ -80,5 +82,19 @@ func (handler *SaveHandler) Load() http.HandlerFunc {
 		handler.LoadFunc(save)
 
 		res.Json(w, 200, "game loaded")
+	}
+}
+
+func (handler *SaveHandler) List() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		saves, err := handler.GetSave()
+		if err != nil {
+			res.Json(w, 0, err)
+			return
+		}
+		response := payload.GetSaveInfoResponse{
+			Saves: saves,
+		}
+		res.Json(w, 200, response)
 	}
 }

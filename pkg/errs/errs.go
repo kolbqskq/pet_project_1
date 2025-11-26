@@ -42,3 +42,7 @@ func NewEquipmentAlreadyOwn() error {
 func NewYouShouldBuyAllTools() error {
 	return &HTTPError{Code: 409, Message: "you should buy all tools"}
 }
+
+func NewSaveNotFound() error {
+	return &HTTPError{Code: 400, Message: "save not found"}
+}

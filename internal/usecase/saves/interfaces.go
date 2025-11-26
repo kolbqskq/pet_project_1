@@ -8,6 +8,7 @@ import (
 
 type GameSaveManager interface {
 	Save(save *save.GameSave) error
+	GetSave() ([]save.SaveInfo, error)
 }
 
 type BalanceManager interface {

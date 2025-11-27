@@ -20,9 +20,9 @@ GET /stats — получить информацию о всех нанятых 
 
 GET /stats?class=... — получить информацию о нанятых шахтёрах определённого класса
 
-POST /game/save + JSON: "name" — сохранить игру
+POST /game/save + querry: "name" — сохранить игру
 
-POST /game/load + JSON: "name" — загрузить игру
+POST /game/load + querry: "name" — загрузить игру
 
 GET /game/list — список сохранений
 

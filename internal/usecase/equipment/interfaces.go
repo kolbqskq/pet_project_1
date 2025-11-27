@@ -7,7 +7,7 @@ type EquipmentBuy interface {
 	GetPrice(name string) int
 }
 
-type BallanceManager interface {
+type BalanceManager interface {
 	SpendCoal(amount int) error
 }
 

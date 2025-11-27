@@ -9,6 +9,6 @@ type MinerManager interface {
 	Mine(ctx context.Context, m *miner.Miner)
 }
 
-type BallanceManager interface {
+type BalanceManager interface {
 	SpendCoal(amount int) error
 }

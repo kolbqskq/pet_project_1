@@ -10,18 +10,18 @@ import (
 
 type EquipmentHandler struct {
 	equipment.EquipmentManager
-	equipment.BallanceManager
+	equipment.BalanceManager
 }
 
 type EquipmentHandlerDeps struct {
 	equipment.EquipmentManager
-	equipment.BallanceManager
+	equipment.BalanceManager
 }
 
 func NewEquipmentHandler(router *http.ServeMux, deps EquipmentHandlerDeps) {
 	handler := &EquipmentHandler{
 		EquipmentManager: deps.EquipmentManager,
-		BallanceManager:  deps.BallanceManager,
+		BalanceManager:   deps.BalanceManager,
 	}
 
 	router.HandleFunc("POST /equipment", handler.BuyEquipment())
@@ -37,9 +37,9 @@ func (handler *EquipmentHandler) BuyEquipment() http.HandlerFunc {
 			return
 		}
 		if err := equipment.BuyEquipment(equipment.BuyEquipmentDeps{
-			Name:            body.Equipment,
-			BallanceManager: handler.BallanceManager,
-			EquipmentBuy:    handler.EquipmentManager,
+			Name:           body.Equipment,
+			BalanceManager: handler.BalanceManager,
+			EquipmentBuy:   handler.EquipmentManager,
 		}); err != nil {
 			res.Json(w, 0, err)
 			return

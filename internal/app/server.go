@@ -13,16 +13,18 @@ func (app *App) RunServer(addr string) {
 	router := http.NewServeMux()
 
 	//Repositories:
-	saveRepository := save.NewSaveRepository(app.Db)
+	saveRepository := save.NewSaveRepository(save.SaveRepositoryDeps{
+		Db: app.Db,
+	})
 
 	//Handlers:
 
 	handler.NewMinersHandler(
 		router,
 		handler.MinersHandlerDeps{
-			Ctx:             app.AppCtx,
-			MinerManager:    app.MinerService,
-			BallanceManager: app.WalletService,
+			Ctx:            app.AppCtx,
+			MinerManager:   app.MinerService,
+			BalanceManager: app.WalletService,
 		},
 	)
 
@@ -30,7 +32,7 @@ func (app *App) RunServer(addr string) {
 		router,
 		handler.EquipmentHandlerDeps{
 			EquipmentManager: app.EquipmentService,
-			BallanceManager:  app.WalletService,
+			BalanceManager:   app.WalletService,
 		},
 	)
 
@@ -45,7 +47,7 @@ func (app *App) RunServer(addr string) {
 		router,
 		handler.EnterpriseHandlerDeps{
 			EnterpriseManager: app.EquipmentService,
-			BallanceManager:   app.WalletService,
+			BalanceManager:    app.WalletService,
 			StatsProvider:     app.StatsService,
 			Ctx:               app.AppCtx,
 			AppCancel:         app.AppCancel,

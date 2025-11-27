@@ -23,12 +23,14 @@ func SaveGame(deps SaveManagerDeps) error {
 		Name:          deps.Name,
 		SaveAt:        time.Now(),
 		GameStartedAt: deps.GameStartedAt,
-		Wallet:        deps.BalanceManager.GetBallance(),
+		Wallet:        deps.BalanceManager.GetBalance(),
 		Equipments:    deps.EquipmentManager.GetEquipmentsStatusOwn(),
 		Miners:        miners,
 	}
 
-	deps.Save(save)
+	if err := deps.Save(save); err != nil {
+		return err
+	}
 
 	return nil
 }

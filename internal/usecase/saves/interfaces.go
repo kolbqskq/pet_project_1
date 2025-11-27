@@ -12,7 +12,7 @@ type GameSaveManager interface {
 }
 
 type BalanceManager interface {
-	GetBallance() int
+	GetBalance() int
 }
 
 type StatsProvider interface {

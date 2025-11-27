@@ -11,8 +11,12 @@ type SaveRepository struct {
 	Db *db.Db
 }
 
-func NewSaveRepository(db *db.Db) *SaveRepository {
-	return &SaveRepository{Db: db}
+type SaveRepositoryDeps struct {
+	Db *db.Db
+}
+
+func NewSaveRepository(deps SaveRepositoryDeps) *SaveRepository {
+	return &SaveRepository{Db: deps.Db}
 }
 
 func (repo *SaveRepository) Save(save *GameSave) error {

@@ -1,9 +1,10 @@
 package event
 
 import (
-	"log"
 	"sync"
 	"time"
+
+	"github.com/gookit/slog"
 )
 
 const (
@@ -33,7 +34,7 @@ func (e *EventBus) Publish(event Event) {
 		select {
 		case ch <- event:
 		case <-time.After(time.Millisecond * 10):
-			log.Printf("Event lost:%v", event)
+			slog.Warn("Event lost:%v", event)
 		}
 	}
 	e.mu.RUnlock()

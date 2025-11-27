@@ -12,7 +12,7 @@ import (
 
 type EnterpriseHandler struct {
 	enterprise.EnterpriseManager
-	enterprise.BallanceManager
+	enterprise.BalanceManager
 	stats.StatsProvider
 	Ctx       context.Context
 	Cancel    context.CancelFunc
@@ -21,7 +21,7 @@ type EnterpriseHandler struct {
 
 type EnterpriseHandlerDeps struct {
 	enterprise.EnterpriseManager
-	enterprise.BallanceManager
+	enterprise.BalanceManager
 	stats.StatsProvider
 	Ctx       context.Context
 	AppCancel context.CancelFunc
@@ -31,7 +31,7 @@ type EnterpriseHandlerDeps struct {
 func NewEnterpriseHandler(router *http.ServeMux, deps EnterpriseHandlerDeps) {
 	handler := &EnterpriseHandler{
 		EnterpriseManager: deps.EnterpriseManager,
-		BallanceManager:   deps.BallanceManager,
+		BalanceManager:    deps.BalanceManager,
 		StatsProvider:     deps.StatsProvider,
 		Ctx:               deps.Ctx,
 		Cancel:            deps.AppCancel,
@@ -39,7 +39,7 @@ func NewEnterpriseHandler(router *http.ServeMux, deps EnterpriseHandlerDeps) {
 	}
 
 	router.HandleFunc("POST /enterprise/end", handler.EndGame())
-	router.HandleFunc("GET /enterprise/ballance", handler.GetCoal())
+	router.HandleFunc("GET /enterprise/balance", handler.GetCoal())
 }
 
 func (handler *EnterpriseHandler) EndGame() http.HandlerFunc {
@@ -54,7 +54,7 @@ func (handler *EnterpriseHandler) EndGame() http.HandlerFunc {
 			return
 		}
 		response := payload.EndGameResponse{
-			Balance:      handler.GetBallance(),
+			Balance:      handler.GetBalance(),
 			Miners:       miners,
 			CountMiners:  handler.GetCountsAllClass(),
 			GameDuration: time.Since(*handler.TimeStart).String(),
@@ -68,7 +68,7 @@ func (handler *EnterpriseHandler) EndGame() http.HandlerFunc {
 func (handler *EnterpriseHandler) GetCoal() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		response := payload.GetBalanceResponse{
-			Coal: handler.GetBallance(),
+			Coal: handler.GetBalance(),
 		}
 		res.Json(w, 200, response)
 	}

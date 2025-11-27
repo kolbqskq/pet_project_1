@@ -13,20 +13,20 @@ import (
 type MinersHandler struct {
 	Ctx context.Context
 	miner.MinerManager
-	miner.BallanceManager
+	miner.BalanceManager
 }
 
 type MinersHandlerDeps struct {
 	Ctx context.Context
 	miner.MinerManager
-	miner.BallanceManager
+	miner.BalanceManager
 }
 
 func NewMinersHandler(router *http.ServeMux, deps MinersHandlerDeps) {
 	handler := &MinersHandler{
-		Ctx:             deps.Ctx,
-		MinerManager:    deps.MinerManager,
-		BallanceManager: deps.BallanceManager,
+		Ctx:            deps.Ctx,
+		MinerManager:   deps.MinerManager,
+		BalanceManager: deps.BalanceManager,
 	}
 
 	router.HandleFunc("POST /miners", handler.BuyMiner())
@@ -42,7 +42,7 @@ func (handler *MinersHandler) BuyMiner() http.HandlerFunc {
 		}
 		if err := miner.BuyMiner(miner.BuyMinerDeps{
 			MinerManager:   handler.MinerManager,
-			BalanceManager: handler.BallanceManager,
+			BalanceManager: handler.BalanceManager,
 			Class:          body.Class,
 			Ctx:            handler.Ctx,
 		}); err != nil {

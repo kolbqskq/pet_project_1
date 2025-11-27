@@ -8,7 +8,7 @@ import (
 
 type BuyMinerDeps struct {
 	MinerManager   MinerManager
-	BalanceManager BallanceManager
+	BalanceManager BalanceManager
 	Class          string
 	Ctx            context.Context
 }
